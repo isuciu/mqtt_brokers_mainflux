@@ -6,9 +6,9 @@ import paho.mqtt.client as mqttClient
 import time
 import random as r
 import copy
+import grafana_users as grafana
 
-
-host='https://54.171.128.181'
+host='https://localhost'
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 #create user account
@@ -20,10 +20,11 @@ def create_account(email, password):
 	}
 	headers={"Content-Type": 'application/json'}
 	response = requests.post(url, json=data,headers=headers, verify=False)
-	#print (response.text)
+	print (response.text)
 
 
 def get_account_token(email, password):
+	print("trying to obtain token")
 	url=host+'/tokens'
 	data={
 		"email":str(email),
@@ -31,7 +32,7 @@ def get_account_token(email, password):
 	}
 	headers={"Content-Type": 'application/json'}
 	response = requests.post(url, json=data,headers=headers, verify=False)
-	#print (response.text)
+	print (response.text)
 	token= response.json()['token']
 	#print (token)
 	return token 
@@ -144,11 +145,13 @@ def get_messages_on_channel(channel_id, thing_key):
 	print (response.text)
 
 def main():
-	email="uoc@xyz.com"
+	name = "Jane Does"
+	organization = "Unknown"
+	email="doe@xyz.com"
 	password="password"
-	#create_account(email, password)
+	create_account(email, password)
 	account_token = get_account_token(email, password)
-	#account_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwNjM5MzcsImlhdCI6MTU3NTAyNzkzNywiaXNzIjoibWFpbmZsdXgiLCJzdWIiOiJ0ZXN0aW5nQHh5ei5jb20ifQ.PqkqXpzRf82GMwK5oc561NU2c-2JHG2DIjSC-BLyXk0"
+	
 	create_thing(account_token, "node 1", "device")
 	thing1_id= return_thing_id(account_token, "node 1")
 	thing1_key= return_thing_key(account_token, "node 1")
@@ -160,8 +163,8 @@ def main():
 	channel_id = return_channel_id(account_token, "comm_channel")
 	connect_to_channel(account_token, channel_id, thing1_id)
 	connect_to_channel(account_token, channel_id, thing2_id)
-	#attempt_sending_message(channel_id, thing1_key)
-	#get_messages_on_channel(channel_id, thing1_key)
+
+	grafana.bootstrap(name, organization, email, password, channel_id)
 	print("accounts and objects created, exporting variables")
 	dictionary = {}
 	dictionary['account_token'] = account_token
@@ -170,7 +173,7 @@ def main():
 	dictionary['thing2_id'] = thing2_id
 	dictionary['thing2_key'] = thing2_key
 	dictionary['channel_id'] = channel_id
-	f = open('tokens.txt', 'w' )
+	f = open('tokens_localhost.txt', 'w' )
 	f.write(json.dumps(dictionary))
 	f.close()
 

@@ -3,10 +3,10 @@ import paho.mqtt.client as mqttClient
 import time
 import random as r
 
-dictionary = eval(open("tokens.txt").read())
+dictionary = eval(open("tokens_localhost.txt").read())
 print(dictionary)
 
-broker_address= "54.171.128.181"
+broker_address= "localhost"
 port = 1883
 thing_id = dictionary["thing1_id"]
 thing_key= dictionary["thing1_key"]
@@ -28,7 +28,7 @@ Connected = False   #global variable for the state of the connection
 client.on_connect= on_connect                      #attach function to callback
 client.connect(broker_address, port=port)          #connect to broker
 
-topic= "channels/" + str(channel_id) +  "/messages/uoc@latest"
+topic= "channels/" + str(channel_id) +  "/messages"
 data = {} #json dictionary
 
 
@@ -48,10 +48,12 @@ try:
             lux = r.uniform(100, 400)
             flow = r.uniform(1, 40)
             timestamp = time.time()
-            payload1 = [{"bn":"testing:","n":"conductivity", "u":"C","v":conductivity, "t":timestamp}]
-            payload2 = [{"bn":"testing:","n":"FLOW", "u":"C","v":flow, "t":timestamp}]
+            payload1 = [{"bn":"","n":"PH", "u":"C","v":ph, "t":timestamp}]
+            payload2 = [{"bn":"","n":"DO", "u":"C","v":do, "t":timestamp}]
+            payload3 = [{"bn":"","n":"Temperature", "u":"C","v":temperature, "t":timestamp}]
             client.publish(topic,json.dumps(payload1)) 
             client.publish(topic,json.dumps(payload2)) 
+            client.publish(topic,json.dumps(payload3)) 
             time.sleep(2)
  
 except KeyboardInterrupt:
