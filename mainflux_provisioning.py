@@ -6,6 +6,7 @@ import paho.mqtt.client as mqttClient
 import time
 import random as r
 import copy
+import grafana_users as grafana
 
 
 host='https://54.171.128.181'
@@ -144,11 +145,13 @@ def get_messages_on_channel(channel_id, thing_key):
 	print (response.text)
 
 def main():
-	email="uoc@xyz.com"
+	name = "Test"
+	organization = "TEST"
+	email="test@xyz.com"
 	password="password"
-	#create_account(email, password)
+	create_account(email, password)
 	account_token = get_account_token(email, password)
-	#account_token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwNjM5MzcsImlhdCI6MTU3NTAyNzkzNywiaXNzIjoibWFpbmZsdXgiLCJzdWIiOiJ0ZXN0aW5nQHh5ei5jb20ifQ.PqkqXpzRf82GMwK5oc561NU2c-2JHG2DIjSC-BLyXk0"
+	
 	create_thing(account_token, "node 1", "device")
 	thing1_id= return_thing_id(account_token, "node 1")
 	thing1_key= return_thing_key(account_token, "node 1")
@@ -160,8 +163,8 @@ def main():
 	channel_id = return_channel_id(account_token, "comm_channel")
 	connect_to_channel(account_token, channel_id, thing1_id)
 	connect_to_channel(account_token, channel_id, thing2_id)
-	#attempt_sending_message(channel_id, thing1_key)
-	#get_messages_on_channel(channel_id, thing1_key)
+
+	grafana.bootstrap(name, organization, email, password, channel_id)
 	print("accounts and objects created, exporting variables")
 	dictionary = {}
 	dictionary['account_token'] = account_token

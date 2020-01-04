@@ -2,8 +2,8 @@ from grafana_api.grafana_face import GrafanaFace
 import json
 import requests
 #login to the grafana api through the library
-grafana_api = GrafanaFace(auth=('admin','admin'), host= '54.171.128.181', port=3001)
-host= 'http://admin:admin@54.171.128.181:3001'
+grafana_api = GrafanaFace(auth=('admin','admin'), port=3001)
+
 # ORGANIZATIONS 
 def _organization_check(organization): #checks if org exists or not in order to create it
 	orgs = grafana_api.organizations.list_organization()
@@ -14,7 +14,7 @@ def _organization_check(organization): #checks if org exists or not in order to 
 	return 0
 
 def _create_organization(organization):
-	url=host + '/api/orgs'
+	url='http://admin:admin@localhost:3001/api/orgs'
 	data={
 		"name":organization,
 	}
@@ -23,7 +23,7 @@ def _create_organization(organization):
 	print (response.text)
 
 def _get_current_organization():
-	url=host + '/api/org/'
+	url='http://admin:admin@localhost:3001api/org/'
 	response = requests.get(url)
 	organization_details = response.json()
 	print(organization_details["name"])
@@ -41,7 +41,7 @@ def _get_organization_id(organization_name):
 def _change_current_organization_to(new_organization):
 	org_id = _get_organization_id(new_organization)
 	print ('organization id ', org_id)
-	url=host + '/api/user/using/' + str(org_id)
+	url='http://admin:admin@localhost:3001/api/user/using/' + str(org_id)
 	headers={"Content-Type": 'application/json'}
 	response = requests.post(url, headers=headers)
 	print (response.text)
@@ -51,7 +51,7 @@ def _delete_organization(org_name):
 	org_id = _get_organization_id(org_name)
 	if org_id != 0:
 		print ("deleting organization..", org_name)
-		url= host + '/api/orgs/' + str(org_id)
+		url= 'http://admin:admin@localhost:3001/api/orgs/' + str(org_id)
 		headers={"Content-Type": 'application/json'}
 		response = requests.delete(url, headers=headers)
 		print (response.text)
@@ -62,7 +62,7 @@ def _delete_organization(org_name):
 # USERS 
 
 def _get_all_users(): #returns all users of the selected organization
-	url=host + '/api/org/users'
+	url='http://admin:admin@localhost:3001/api/org/users'
 	response = requests.get(url)
 	user_list = response.json()
 	for i in range(len(user_list)):
@@ -81,7 +81,7 @@ def _user_check(user_org, user):
 
 def _create_user(user): #creates it and does not assign it to anything
 	print("****************************************")
-	url=host + '/api/admin/users'
+	url='http://admin:admin@localhost:3001/api/admin/users'
 	data={
 		"name": user["name"],
 		"email": user["email"],
@@ -94,7 +94,7 @@ def _create_user(user): #creates it and does not assign it to anything
 
 def _assign_user_to_organization(organization, user, role):
 	org_id=_get_organization_id(organization)
-	url=host + '/api/orgs/'+ str(org_id)+ '/users'
+	url='http://admin:admin@localhost:3001/api/orgs/'+ str(org_id)+ '/users'
 	data={
 		"loginOrEmail": user["login"],
 		"role": str(role),
@@ -105,7 +105,7 @@ def _assign_user_to_organization(organization, user, role):
 	print (response.text)
 
 def _get_global_user_id(user_login): #without switching to org
-	url=host + '/api/users/lookup?loginOrEmail=' + str(user_login)
+	url='http://admin:admin@localhost:3001/api/users/lookup?loginOrEmail=' + str(user_login)
 	headers={"Content-Type": 'application/json'}
 	response = requests.get(url, headers=headers)
 	print (response.text)
@@ -122,7 +122,7 @@ def _delete_user(user_login):
 	print ("deleting user .. ", user_login)
 	user_id = _get_global_user_id(user_login)
 	if user_id != 0:
-		url = host + '/api/admin/users/' + str(user_id)
+		url = 'http://admin:admin@localhost:3001/api/admin/users/' + str(user_id)
 		headers={"Content-Type": 'application/json'}
 		response = requests.delete(url, headers=headers)
 		print (response.text)
@@ -131,21 +131,21 @@ def _remove_user_from_org(user_login):
 	print ("removing user from current organization .. ", user_login)
 	user_id = _get_global_user_id(user_login)
 	if user_id != 0:
-		url = host + '/api/org/users/' + str(user_id)
+		url = 'http://admin:admin@localhost:3001/api/org/users/' + str(user_id)
 		headers={"Content-Type": 'application/json'}
 		response = requests.delete(url, headers=headers)
 		print (response.text)
 
 # DATASOURCES
 def _create_datasource(name, database, admin_name, admin_pass):
-	url=host + '/api/datasources'
+	url='http://admin:admin@localhost:3001/api/datasources'
 	data={
 		"name":name,
 		"type":"influxdb",
-		"url":"http://influxdb:8086",
-		"access":"proxy", #vs direct/proxy
-		"password": "mainflux",#admin_pass,
-		"user": "mainflux",#admin_name,
+		"url":"http://localhost:8086",
+		"access":"direct", #vs proxy
+		"password": admin_pass,
+		"user": admin_name,
 		"database": database,
 		"httpMode": "GET"  #very important field!!!
 
@@ -156,7 +156,7 @@ def _create_datasource(name, database, admin_name, admin_pass):
 
 
 def _delete_datasource(datasource_name):
-	url=host + "/api/datasources/name/" + str(datasource_name)
+	url="http://admin:admin@localhost:3001/api/datasources/name/" + str(datasource_name)
 	headers={"Content-Type": 'application/json'}
 	response = requests.delete(url, headers=headers)
 	print (response.text)
@@ -164,7 +164,7 @@ def _delete_datasource(datasource_name):
 # DASHBOARDS
 
 def _create_dashboard(name):
-	url=host + "/api/dashboards/db"
+	url="http://admin:admin@localhost:3001/api/dashboards/db"
 	headers={"Content-Type": 'application/json'}
 	data = {
 		"dashboard": {
@@ -184,7 +184,7 @@ def _create_dashboard(name):
 
 def _update_dashboard(name, id, datasource_name, measurement1, parameter1, measurement2, parameter2, measurement3, parameter3):
 	#future versions: add time intervals too
-	url=host + "/api/dashboards/db"
+	url="http://admin:admin@localhost:3001/api/dashboards/db"
 	headers={"Content-Type": 'application/json'}
 	data = {
 	  "dashboard": {
@@ -545,7 +545,7 @@ def _update_dashboard(name, id, datasource_name, measurement1, parameter1, measu
 	print (response.text)
 
 def _get_dashboard_uid(dash_title):
-	url= host + "/api/search?folderIds=0&query=&starred=false"
+	url= "http://admin:admin@localhost:3001/api/search?folderIds=0&query=&starred=false"
 	headers={"Content-Type": 'application/json'}
 	response = requests.get(url, headers=headers)
 	#print (response.text)
@@ -559,7 +559,7 @@ def _get_dashboard_json(dash_title, org):
 	_change_current_organization_to(org)
 	dash_uid = _get_dashboard_uid(dash_title)
 	if dash_uid != 0:
-		url= host + "/api/dashboards/uid/" + str(dash_uid)
+		url= "http://admin:admin@localhost:3001/api/dashboards/uid/" + str(dash_uid)
 		headers={"Content-Type": 'application/json'}
 		response = requests.get(url, headers=headers)
 
@@ -573,7 +573,7 @@ def _delete_dashboard(dash_title):
 	dash_uid=_get_dashboard_uid(dash_title)
 	if dash_uid != 0:
 		print ("deleting dashboard ...", dash_title)
-		url= host + "/api/dashboards/uid/" + str(dash_uid)
+		url= "http://admin:admin@localhost:3001/api/dashboards/uid/" + str(dash_uid)
 		headers={"Content-Type": 'application/json'}
 		response = requests.delete(url, headers=headers)
 		print (response.text)

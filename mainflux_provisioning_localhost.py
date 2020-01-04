@@ -6,7 +6,7 @@ import paho.mqtt.client as mqttClient
 import time
 import random as r
 import copy
-import grafana_users as grafana
+import grafana_users_localhost as grafana
 
 host='https://localhost'
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -145,7 +145,7 @@ def get_messages_on_channel(channel_id, thing_key):
 	print (response.text)
 
 def main():
-	name = "Jane Does"
+	name = "Jane Doe"
 	organization = "Unknown"
 	email="doe@xyz.com"
 	password="password"

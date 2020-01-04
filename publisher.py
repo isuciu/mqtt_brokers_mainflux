@@ -48,10 +48,12 @@ try:
             lux = r.uniform(100, 400)
             flow = r.uniform(1, 40)
             timestamp = time.time()
-            payload1 = [{"bn":"testing:","n":"conductivity", "u":"C","v":conductivity, "t":timestamp}]
-            payload2 = [{"bn":"testing:","n":"FLOW", "u":"C","v":flow, "t":timestamp}]
+            payload1 = [{"bn":"","n":"PH", "u":"C","v":ph, "t":timestamp}]
+            payload2 = [{"bn":"","n":"DO", "u":"C","v":do, "t":timestamp}]
+            payload3 = [{"bn":"","n":"Temperature", "u":"C","v":temperature, "t":timestamp}]
             client.publish(topic,json.dumps(payload1)) 
             client.publish(topic,json.dumps(payload2)) 
+            client.publish(topic,json.dumps(payload3)) 
             time.sleep(2)
  
 except KeyboardInterrupt:
