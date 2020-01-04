@@ -28,7 +28,7 @@ Connected = False   #global variable for the state of the connection
 client.on_connect= on_connect                      #attach function to callback
 client.connect(broker_address, port=port)          #connect to broker
 
-topic= "channels/" + str(channel_id) +  "/messages/uoc@latest"
+topic= "channels/" + str(channel_id) +  "/messages"
 data = {} #json dictionary
 
 
