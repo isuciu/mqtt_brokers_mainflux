@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 import json
+import time
 
 dictionary = eval(open("tokens_localhost.txt").read())
 print(dictionary)
@@ -34,7 +35,13 @@ def on_message(client, userdata, msg):
 		print("not this type of message")
 
 def SetSR(sensor, value, unit):
-	print ("Setting the SR of the " + str(sensor) + " sensor to "+ str(value) +str(unit)) 
+	global client, topic
+	print ("Setting the SR of the " + str(sensor) + " sensor to "+ str(value) +str(unit))
+	timestamp = time.time()
+	#data = [{"bn":"","n":sensor, "u":unit,"v":value, "t":timestamp}]
+	#print(data)
+	data = [{"bn":"","n":sensor, "u":unit,"v":int(value), "t":timestamp}]
+	client.publish(topic,json.dumps(data))  
 
 
 client = mqtt.Client()
