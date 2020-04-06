@@ -146,8 +146,8 @@ def get_messages_on_channel(channel_id, thing_key):
 
 def main():
 	name = "Jane Doe"
-	organization = "Unknown"
-	email="doe@xyz.com"
+	organization = "LAST"
+	email="last@xyz.com"
 	password="password"
 	create_account(email, password)
 	account_token = get_account_token(email, password)
@@ -161,6 +161,8 @@ def main():
 	thing2_key= return_thing_key(account_token, "app")
 	create_channel(account_token, "comm_channel")
 	channel_id = return_channel_id(account_token, "comm_channel")
+	
+
 	connect_to_channel(account_token, channel_id, thing1_id)
 	connect_to_channel(account_token, channel_id, thing2_id)
 

@@ -28,10 +28,12 @@ Connected = False   #global variable for the state of the connection
 client.on_connect= on_connect                      #attach function to callback
 client.connect(broker_address, port=port)          #connect to broker
 
-topic= "channels/" + str(channel_id) +  "/messages"
+#topic= "channels/" + str(channel_id) +  "/messages/node1"
+topic= "channels/" + str(channel_id) +  "/control"
+#topic = "bullshittopic"
 data = {} #json dictionary
 
-
+node_nb=5
  
  
 client.loop_start()        #start the loop
@@ -41,6 +43,9 @@ while Connected != True:    #Wait for connection
  
 try:
     while True:
+        for i in range(node_nb):
+
+            nodeid= "node"+str(i)+":"
             temperature = r.uniform(15, 22)
             ph = r.uniform(1, 14)
             do = r.uniform(100, 200)
@@ -51,8 +56,11 @@ try:
             payload1 = [{"bn":"","n":"PH", "u":"C","v":ph, "t":timestamp}]
             payload2 = [{"bn":"","n":"DO", "u":"C","v":do, "t":timestamp}]
             payload3 = [{"bn":"","n":"Temperature", "u":"C","v":temperature, "t":timestamp}]
+           # topic= "channels/" + str(channel_id) +  "/control/PH"
             client.publish(topic,json.dumps(payload1)) 
+          #  topic= "channels/" + str(channel_id) +  "/control/DO"
             client.publish(topic,json.dumps(payload2)) 
+           # topic= "channels/" + str(channel_id) +  "/control/Temperature"
             client.publish(topic,json.dumps(payload3)) 
             time.sleep(2)
  
