@@ -30,6 +30,7 @@ client.connect(broker_address, port=port)          #connect to broker
 
 #topic= "channels/" + str(channel_id) +  "/messages/node1"
 topic= "channels/" + str(channel_id) +  "/control"
+topic_end = "control"
 #topic = "bullshittopic"
 data = {} #json dictionary
 
@@ -43,26 +44,31 @@ while Connected != True:    #Wait for connection
  
 try:
     while True:
-        for i in range(node_nb):
-
-            nodeid= "node"+str(i)+":"
-            temperature = r.uniform(15, 22)
-            ph = r.uniform(1, 14)
-            do = r.uniform(100, 200)
-            conductivity = r.uniform(10, 20)
-            lux = r.uniform(100, 400)
-            flow = r.uniform(1, 40)
+        if topic_end== "control":
             timestamp = time.time()
-            payload1 = [{"bn":"","n":"PH", "u":"C","v":ph, "t":timestamp}]
-            payload2 = [{"bn":"","n":"DO", "u":"C","v":do, "t":timestamp}]
-            payload3 = [{"bn":"","n":"Temperature", "u":"C","v":temperature, "t":timestamp}]
-           # topic= "channels/" + str(channel_id) +  "/control/PH"
-            client.publish(topic,json.dumps(payload1)) 
-          #  topic= "channels/" + str(channel_id) +  "/control/DO"
-            client.publish(topic,json.dumps(payload2)) 
-           # topic= "channels/" + str(channel_id) +  "/control/Temperature"
-            client.publish(topic,json.dumps(payload3)) 
+            data = [{"bn":"","n":"Temperature", "u":"C","v":25, "t":timestamp}]
+            client.publish(topic,json.dumps(data))  
             time.sleep(2)
+        else:
+            for i in range(node_nb):
+                nodeid= "node"+str(i)+":"
+                temperature = r.uniform(15, 22)
+                ph = r.uniform(1, 14)
+                do = r.uniform(100, 200)
+                conductivity = r.uniform(10, 20)
+                lux = r.uniform(100, 400)
+                flow = r.uniform(1, 40)
+                timestamp = time.time()
+                payload1 = [{"bn":"","n":"PH", "u":"C","v":ph, "t":timestamp}]
+                payload2 = [{"bn":"","n":"DO", "u":"C","v":do, "t":timestamp}]
+                payload3 = [{"bn":"","n":"Temperature", "u":"C","v":temperature, "t":timestamp}]
+                # topic= "channels/" + str(channel_id) +  "/control/PH"
+                client.publish(topic,json.dumps(payload1)) 
+                #  topic= "channels/" + str(channel_id) +  "/control/DO"
+                client.publish(topic,json.dumps(payload2)) 
+                # topic= "channels/" + str(channel_id) +  "/control/Temperature"
+                client.publish(topic,json.dumps(payload3)) 
+                time.sleep(2)
  
 except KeyboardInterrupt:
     print("bye bye")

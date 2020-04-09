@@ -35,6 +35,7 @@
   "annotations": {
     "list": [
       {
+        "$$hashKey": "object:66",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -49,7 +50,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1586419165163,
+  "iteration": 1586437930896,
   "links": [],
   "panels": [
     {
@@ -253,7 +254,7 @@
       "timeShift": null,
       "title": "Sampling Rate",
       "type": "ryantxu-ajax-panel",
-      "url": "http://127.0.0.1/control/tryingajax/SetSR/$Publisher/$Topic/sensors/$Sensors",
+      "url": "http://127.0.0.1/control/SetSR/$Publisher/$Topic/sensors/$Sensors",
       "withCredentials": false
     },
     {
@@ -380,7 +381,7 @@
       "valueName": "current"
     }
   ],
-  "refresh": false,
+  "refresh": "15m",
   "schemaVersion": 22,
   "style": "dark",
   "tags": [],
@@ -457,9 +458,9 @@
       },
       {
         "current": {
-          "selected": true,
-          "text": "c3c1d324-1757-4ab0-bfac-b9acefeed495",
-          "value": "c3c1d324-1757-4ab0-bfac-b9acefeed495"
+          "selected": false,
+          "text": "65f92930-94ea-4033-a7de-5ecf4eaec8e9",
+          "value": "65f92930-94ea-4033-a7de-5ecf4eaec8e9"
         },
         "hide": 0,
         "includeAll": false,
@@ -494,10 +495,10 @@
     ]
   },
   "timezone": "",
-  "title": "imported_unknowd_default_dashboard",
-  "uid": "q77QduLWk",
+  "title": "newer_default_dashboard",
+  "uid": "-7R9MxjWk",
   "variables": {
     "list": []
   },
-  "version": 24
+  "version": 4
 }
