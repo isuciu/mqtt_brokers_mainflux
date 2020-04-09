@@ -145,9 +145,9 @@ def get_messages_on_channel(channel_id, thing_key):
 	print (response.text)
 
 def main():
-	name = "Jane Doe"
-	organization = "LAST"
-	email="last@xyz.com"
+	name = "newer"
+	organization = "newer"
+	email="newer@xyz.com"
 	password="password"
 	create_account(email, password)
 	account_token = get_account_token(email, password)

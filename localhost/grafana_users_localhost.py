@@ -9,7 +9,8 @@ def bootstrap(name, organization, email, password, channel_id):
 	local, at, domain = email.rpartition('@')
 	user["login"] = str(local)
 	user["password"] = str(password)
-
+	with open('dashboard.json') as f:
+		dash_json = json.load(f)
 	org = str(organization)
 	org_database_name = str(channel_id)
 
@@ -27,8 +28,9 @@ def bootstrap(name, organization, email, password, channel_id):
 	print("******creating default organization dashboard")
 	org_dashboard_name = str(org)+'_default_dashboard'
 	gr._create_dashboard(org_dashboard_name)
+	print("******updating default organization dashboard")
 	org_dashboard_uid=gr._get_dashboard_uid(org_dashboard_name)
-	gr._update_dashboard(org_dashboard_name, org_dashboard_uid, org_database_name, "messages", "Temperature", "messages", "PH", "messages", "DO")
+	gr._update_dashboard(dash_json, org_dashboard_name, org_dashboard_uid)
 
 	
 	print("******Adding users as editors")		
